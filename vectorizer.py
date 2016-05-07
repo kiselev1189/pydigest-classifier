@@ -7,7 +7,6 @@ from sklearn.feature_selection import SelectKBest, chi2
 from stop_words import get_stop_words
 
 
-
 class GeomFeatureExtractor(BaseEstimator):
     """
     Computes various geometric properties of articles, returns them in dictionary, paired with article and title text.
@@ -56,8 +55,9 @@ class GeomFeatureExtractor(BaseEstimator):
             density = get_text_density(article)
             descrlen = len(descr)
             article_text = BeautifulSoup(article, "html.parser").text
+            kword_freq = get_keyword_frequency(article) / len(article)
             doc_vec = {
-                "geom_features": [total_len, textlen, density, titlelen, taglen, descrlen, lang],
+                "geom_features": [total_len, textlen, density, titlelen, taglen, descrlen, lang, kword_freq],
                 "title_text": title,
                 "article_text": article_text
             }

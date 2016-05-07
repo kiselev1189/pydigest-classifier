@@ -19,7 +19,7 @@ def to_bool(s):
         return False
 
 
-input_path = sys.argv[1]
+input_path = "report (3).csv"
 with open(input_path) as csvreport:
     reportreader = csv.DictReader(csvreport, delimiter=",")
     y_true = []
@@ -34,5 +34,5 @@ print("Precision:", precision_score(y_true, y_pred))
 print("Recall:", recall_score(y_true, y_pred))
 print("Accuracy:", accuracy_score(y_true, y_pred))
 print("F1 score:", f1_score(y_true, y_pred))
-sns.heatmap(conf, fmt="d", cbar=False, xticklabels=["Predicted: True", "Predicted: False"], yticklabels=["Real: True", "Real: False"])
+sns.heatmap(conf, fmt="d", cbar=False, annot=True, xticklabels=["Predicted: True", "Predicted: False"], yticklabels=["Real: True", "Real: False"])
 sns.plt.show()

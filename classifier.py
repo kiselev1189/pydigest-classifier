@@ -56,8 +56,8 @@ class ChainedClassifier(BaseEstimator, ClassifierMixin):
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
         self.max_features = max_features
-        self.gradboost = GradientBoostingClassifier(n_estimators=3000, learning_rate=self.learning_rate, max_depth=self.max_depth,
-                                                    min_samples_leaf=self.min_samples_leaf, max_features=self.max_features)
+        self.gradboost = GradientBoostingClassifier(n_estimators=5000,
+                                        learning_rate=0.01, max_depth=10, min_samples_leaf=20, max_features=6)
 
         self.title_semantic = Pipeline([('vect', CountVectorizer(tokenizer=tokenize, stop_words=(get_stop_words("english") + get_stop_words("russian")))),
                                         ('clf', SVC(probability=True))
@@ -90,19 +90,19 @@ class ChainedClassifier(BaseEstimator, ClassifierMixin):
 
     def fit(self, X, y):
 
-        self.fit_buzzword_list(X, y)
+        #self.fit_buzzword_list(X, y)
 
         title_texts = [i["title_text"] for i in X]
         self.title_semantic.fit(title_texts, y)
         title_probs = self.title_semantic.predict_proba(title_texts)
 
         article_texts = [i["article_text"] for i in X]
-        buzzword_score = [self.buzzword_score(i) for i in article_texts]
+        #buzzword_score = [self.buzzword_score(i) for i in article_texts]
 
         geom_features = [i["geom_features"] for i in X]
         for i in range(0, len(geom_features)):
             geom_features[i].append(title_probs[i][1])
-            geom_features[i].append(buzzword_score[i])
+            #geom_features[i].append(buzzword_score[i])
         self.gradboost.fit(geom_features, y)
 
         return self
@@ -112,13 +112,13 @@ class ChainedClassifier(BaseEstimator, ClassifierMixin):
         title_probs = self.title_semantic.predict_proba(title_texts)
 
         article_texts = [i["article_text"] for i in X]
-        buzzword_score = [self.buzzword_score(i) for i in article_texts]
+        #buzzword_score = [self.buzzword_score(i) for i in article_texts]
 
 
         geom_features = [i["geom_features"] for i in X]
         for i in range(0, len(geom_features)):
             geom_features[i].append(title_probs[i][1])
-            geom_features[i].append(buzzword_score[i])
+            #geom_features[i].append(buzzword_score[i])
         return self.gradboost.predict(geom_features)
 
     def predict_proba(self, X):
@@ -126,12 +126,12 @@ class ChainedClassifier(BaseEstimator, ClassifierMixin):
         title_probs = self.title_semantic.predict_proba(title_texts)
 
         article_texts = [i["article_text"] for i in X]
-        buzzword_score = [self.buzzword_score(i) for i in article_texts]
+        #buzzword_score = [self.buzzword_score(i) for i in article_texts]
 
         geom_features = [i["geom_features"] for i in X]
         for i in range(0, len(geom_features)):
             geom_features[i].append(title_probs[i][1])
-            geom_features[i].append(buzzword_score[i])
+            #geom_features[i].append(buzzword_score[i])
         return self.gradboost.predict_proba(geom_features)
 
     def set_params(self, **parameters):

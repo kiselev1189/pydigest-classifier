@@ -31,7 +31,6 @@ if __name__ == "__main__":
 
     text_clf = Pipeline([('vect', GeomFeatureExtractor()),
                         ('clf', ChainedClassifier())
-                        ])
-
+                         ])
     text_clf.fit(input_data, input_labels)
     joblib.dump(text_clf, out_path, compress=1)
