@@ -19,7 +19,7 @@ def to_bool(s):
         return False
 
 
-input_path = "report (3).csv"
+input_path = sys.argv[1]
 with open(input_path) as csvreport:
     reportreader = csv.DictReader(csvreport, delimiter=",")
     y_true = []
